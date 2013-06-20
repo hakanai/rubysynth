@@ -1,3 +1,5 @@
+include RubySynth
+
 def sineBeep
   return SineOscillator.new(44100, 440.0, 0.5).nextSamples(44100)
 end
