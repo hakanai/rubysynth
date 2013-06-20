@@ -1,3 +1,5 @@
+module RubySynth
+
 =begin
 WAV File Specification
 FROM http://ccrma.stanford.edu/courses/422/projects/WaveFormat/
@@ -43,65 +45,66 @@ The "data" subchunk contains the size of the data and the actual sound:
 44        *   Data             The actual sound data.
 =end
 
-class WaveFile
-  CHUNK_ID = "RIFF"
-  FORMAT = "WAVE"
-  SUB_CHUNK1_ID = "fmt "
-  SUB_CHUNK1_SIZE = 16
-  AUDIO_FORMAT = 1
-  SUB_CHUNK2_ID = "data"
-  HEADER_SIZE = 36
-  
-  def initialize(numChannels, sampleRate, bitsPerSample)
-    @numChannels = numChannels
-    @sampleRate = sampleRate
-    @bitsPerSample = bitsPerSample
+  class WaveFile
+    CHUNK_ID = "RIFF"
+    FORMAT = "WAVE"
+    SUB_CHUNK1_ID = "fmt "
+    SUB_CHUNK1_SIZE = 16
+    AUDIO_FORMAT = 1
+    SUB_CHUNK2_ID = "data"
+    HEADER_SIZE = 36
     
-    @byteRate = sampleRate * numChannels * (bitsPerSample / 8)
-    @blockAlign = numChannels * (bitsPerSample / 8)
-    @sampleData = []
-    @chunkSize = HEADER_SIZE + 0
-  end
-  
-  def save(path)
-    # All numeric values should be saved in little-endian format
-    
-    sampleDataSize = @sampleData.length * @numChannels * (@bitsPerSample / 8)
-    
-    fileContents = CHUNK_ID
-    fileContents += [HEADER_SIZE + sampleDataSize].pack("V")
-    fileContents += FORMAT
-    fileContents += SUB_CHUNK1_ID
-    fileContents += [SUB_CHUNK1_SIZE].pack("V")
-    fileContents += [AUDIO_FORMAT].pack("v")
-    fileContents += [@numChannels].pack("v")
-    fileContents += [@sampleRate].pack("V")
-    fileContents += [@byteRate].pack("V")
-    fileContents += [@blockAlign].pack("v")
-    fileContents += [@bitsPerSample].pack("v")
-    fileContents += SUB_CHUNK2_ID
-    fileContents += [sampleDataSize].pack("V")
-    
-    if @bitsPerSample == 8
-      # Samples in 8-bit wave files are stored as a unsigned byte
-      # Effective values are 0 to 255
-      @sampleData = @sampleData.map {|sample| ((sample * 127.0).to_i) + 127 }
-      fileContents += @sampleData.pack("C*")
-    elsif @bitsPerSample == 16
-      # Samples in 16-bit wave files are stored as a signed little-endian short
-      # Effective values are -32768 to 32767
-      @sampleData = @sampleData.map {|sample| (sample * 32767.0).to_i }
-      fileContents += @sampleData.pack("v*")
-    else
-      # Throw an error
+    def initialize(numChannels, sampleRate, bitsPerSample)
+      @numChannels = numChannels
+      @sampleRate = sampleRate
+      @bitsPerSample = bitsPerSample
+      
+      @byteRate = sampleRate * numChannels * (bitsPerSample / 8)
+      @blockAlign = numChannels * (bitsPerSample / 8)
+      @sampleData = []
+      @chunkSize = HEADER_SIZE + 0
     end
     
-    aFile = File.open(path, "w")
-    aFile.syswrite(fileContents)
-    aFile.close
-    @sampleData
+    def save(path)
+      # All numeric values should be saved in little-endian format
+      
+      sampleDataSize = @sampleData.length * @numChannels * (@bitsPerSample / 8)
+      
+      fileContents = CHUNK_ID
+      fileContents += [HEADER_SIZE + sampleDataSize].pack("V")
+      fileContents += FORMAT
+      fileContents += SUB_CHUNK1_ID
+      fileContents += [SUB_CHUNK1_SIZE].pack("V")
+      fileContents += [AUDIO_FORMAT].pack("v")
+      fileContents += [@numChannels].pack("v")
+      fileContents += [@sampleRate].pack("V")
+      fileContents += [@byteRate].pack("V")
+      fileContents += [@blockAlign].pack("v")
+      fileContents += [@bitsPerSample].pack("v")
+      fileContents += SUB_CHUNK2_ID
+      fileContents += [sampleDataSize].pack("V")
+      
+      if @bitsPerSample == 8
+        # Samples in 8-bit wave files are stored as a unsigned byte
+        # Effective values are 0 to 255
+        @sampleData = @sampleData.map {|sample| ((sample * 127.0).to_i) + 127 }
+        fileContents += @sampleData.pack("C*")
+      elsif @bitsPerSample == 16
+        # Samples in 16-bit wave files are stored as a signed little-endian short
+        # Effective values are -32768 to 32767
+        @sampleData = @sampleData.map {|sample| (sample * 32767.0).to_i }
+        fileContents += @sampleData.pack("v*")
+      else
+        # Throw an error
+      end
+      
+      aFile = File.open(path, "w")
+      aFile.syswrite(fileContents)
+      aFile.close
+      @sampleData
+    end
+    
+    attr_reader :numChannels, :sampleRate, :bitsPerSample, :byteRate, :blockAlign
+    attr_writer :sampleData
   end
-  
-  attr_reader :numChannels, :sampleRate, :bitsPerSample, :byteRate, :blockAlign
-  attr_writer :sampleData
 end
