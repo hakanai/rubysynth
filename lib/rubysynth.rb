@@ -1,0 +1,8 @@
+require 'rubysynth/music_theory'
+require 'rubysynth/oscillator'
+require 'rubysynth/instrument'
+require 'rubysynth/song'
+require 'rubysynth/track'
+require 'rubysynth/note'
+require 'rubysynth/rest'
+require 'rubysynth/wave_file'
