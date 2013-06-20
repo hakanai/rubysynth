@@ -1,11 +1,32 @@
 module RubySynth
-  class Oscillator
+
+  # Represents a waveform. A waveform might be a simple oscillator or a complex waveform.
+  # Method waveFunction defined by the subclass returns the value of the waveform for @periodOffset.
+  class Waveform
+    def initialize
+      @periodOffset = 0.0
+    end
+
+    def nextSamples(numSamples)
+      samples = Array.new(numSamples)
+
+      (0..numSamples).each do |i|
+        samples[i - 1] = nextSample()
+      end
+
+      samples
+    end
+
+    attr_reader :periodOffset
+  end
+
+  class Oscillator < Waveform
     def initialize(sampleRate, frequency, amplitude)
+      super()
+
       @sampleRate = sampleRate
       self.frequency = frequency
       @amplitude = amplitude
-      
-      @periodOffset = 0.0
     end
 
     def nextSample
@@ -19,16 +40,6 @@ module RubySynth
       return sample
     end
 
-    def nextSamples(numSamples)
-      samples = Array.new(numSamples)
-
-      (0..numSamples).each do |i|
-        samples[i - 1] = nextSample()
-      end
-
-      samples
-    end
-    
     def frequency
       @frequency
     end
@@ -39,13 +50,13 @@ module RubySynth
     end
       
     attr_accessor :amplitude
-    attr_reader :sampleRate, :periodOffset, :periodDelta
+    attr_reader :sampleRate, :periodDelta
   end
 
 
   class SineOscillator < Oscillator
-    def waveFunction
-      @amplitude * Math::sin(@periodOffset * 2.0 * Math::PI)
+    def waveFunction(phase_modulation = 0)
+      @amplitude * Math::sin(@periodOffset * 2.0 * Math::PI + phase_modulation)
     end
   end
 
