@@ -73,4 +73,5 @@ module RubySynth
     def MusicTheory.enharmonicEquivalent(noteName)
       ENHARMONIC_EQUIVALENTS[noteName]
     end
+  end
 end
