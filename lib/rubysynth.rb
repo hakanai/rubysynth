@@ -1,5 +1,6 @@
 require 'rubysynth/music_theory'
 require 'rubysynth/oscillator'
+require 'rubysynth/adder'
 require 'rubysynth/phase_modulator'
 require 'rubysynth/instrument'
 require 'rubysynth/song'

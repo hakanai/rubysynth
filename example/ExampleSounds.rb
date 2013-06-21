@@ -18,7 +18,7 @@ end
 
 def majorScale
   bpm = 140
-  saw = Instrument.new(120, SineOscillator.new(44100, 220.0, 0.5), [], nil, nil)
+  saw = Instrument.new(120, SineOscillator.new(44100, 220.0, 0.5), nil, nil)
   
   t = Track.new(saw)
   t.notes << Note.new("A", 4, 4)
@@ -35,7 +35,7 @@ end
 
 def minorScale
   bpm = 140
-  saw = Instrument.new(120, SineOscillator.new(44100, 220.0, 0.5), [], nil, nil)
+  saw = Instrument.new(120, SineOscillator.new(44100, 220.0, 0.5), nil, nil)
   
   t = Track.new(saw)
   t.notes << Note.new("A", 3, 4)
@@ -51,9 +51,9 @@ def minorScale
 end
 
 def triads
-  bottom = Instrument.new(120, SineOscillator.new(44100, 220.0, 0.5), [], nil, nil)
-  middle = Instrument.new(120, SineOscillator.new(44100, 220.0, 0.5), [], nil, nil)
-  top = Instrument.new(120, SineOscillator.new(44100, 220.0, 0.5), [], nil, nil)
+  bottom = Instrument.new(120, SineOscillator.new(44100, 220.0, 0.5), nil, nil)
+  middle = Instrument.new(120, SineOscillator.new(44100, 220.0, 0.5), nil, nil)
+  top = Instrument.new(120, SineOscillator.new(44100, 220.0, 0.5), nil, nil)
 
   bottomTrack = Track.new(bottom)
   bottomTrack.notes << Note.new("C", 3, 2)
@@ -80,8 +80,8 @@ def triads
 end
 
 def vibratoExample
-  normal = Instrument.new(120, SawtoothOscillator.new(44100, 220.0, 0.3), [], nil, nil)
-  vibrato = Instrument.new(120, SawtoothOscillator.new(44100, 220.0, 0.3), [], SineOscillator.new(44100, 9.0, 15.0), nil)
+  normal = Instrument.new(120, SawtoothOscillator.new(44100, 220.0, 0.3), nil, nil)
+  vibrato = Instrument.new(120, SawtoothOscillator.new(44100, 220.0, 0.3), SineOscillator.new(44100, 9.0, 15.0), nil)
 
   normalTrack = Track.new(normal)
   normalTrack.notes << Note.new("A", 3, 1)
@@ -97,8 +97,8 @@ def vibratoExample
 end
 
 def tremoloExample
-  normal = Instrument.new(120, SawtoothOscillator.new(44100, 220.0, 0.3), [], nil, nil)
-  tremolo = Instrument.new(120, SawtoothOscillator.new(44100, 220.0, 0.3), [], nil, SineOscillator.new(44100, 5.0, 0.3))
+  normal = Instrument.new(120, SawtoothOscillator.new(44100, 220.0, 0.3), nil, nil)
+  tremolo = Instrument.new(120, SawtoothOscillator.new(44100, 220.0, 0.3), nil, SineOscillator.new(44100, 5.0, 0.3))
 
   normalTrack = Track.new(normal)
   normalTrack.notes << Note.new("A", 3, 1)

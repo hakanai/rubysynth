@@ -1,10 +1,10 @@
 def DemoSong
   bpm = 120
-  noiseDrum = Instrument.new(bpm, NoiseOscillator.new(44100, 220.0, 1.0), [])
-  synthBass = Instrument.new(bpm, SquareOscillator.new(44100, 220.0, 0.3), [1.0], nil, nil)
-  #voice = Instrument.new(bpm, SawtoothOscillator.new(44100, 220.0, 0.3), [], SineOscillator.new(44100, 3.0, 5.0), nil)
-  #voice = Instrument.new(bpm, SawtoothOscillator.new(44100, 220.0, 0.3), [], nil, SineOscillator.new(44100, 10.0, 0.3))
-  voice = Instrument.new(bpm, SawtoothOscillator.new(44100, 220.0, 0.3), [], nil, nil)
+  noiseDrum = Instrument.new(bpm, NoiseOscillator.new(44100, 220.0, 1.0))
+  synthBass = Instrument.new(bpm, OvertoneAdder.new(SquareOscillator.new(44100, 220.0, 0.3), [1.0]), nil, nil)
+  #voice = Instrument.new(bpm, SawtoothOscillator.new(44100, 220.0, 0.3), SineOscillator.new(44100, 3.0, 5.0), nil)
+  #voice = Instrument.new(bpm, SawtoothOscillator.new(44100, 220.0, 0.3), nil, SineOscillator.new(44100, 10.0, 0.3))
+  voice = Instrument.new(bpm, SawtoothOscillator.new(44100, 220.0, 0.3), nil, nil)
   
   drumTrack = Track.new(noiseDrum)
   2.times {

@@ -4,7 +4,7 @@ def phaseModulatedMajorScale
   waveform = PhaseModulator.new(
     SineOscillator.new(44100, 440.0, 0.5),
     SineOscillator.new(44100, 440.0*3.9, 1))
-  saw = Instrument.new(120, waveform, [], nil, nil)
+  saw = Instrument.new(120, waveform, nil, nil)
   
   t = Track.new(saw)
   t.notes << Note.new("A", 4, 4)

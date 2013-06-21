@@ -3,8 +3,8 @@ require 'Includes'
 
 startTime = Time.now
 #data = sineBeep()
-data = phaseModulatedMajorScale()
-#data = DemoSong()
+#data = phaseModulatedMajorScale()
+data = DemoSong()
 #data = SweetChildOMine()
 #data = SweetDreams()
 stopTime = Time.now

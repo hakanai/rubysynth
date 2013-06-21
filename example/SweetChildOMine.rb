@@ -1,6 +1,6 @@
 def SweetChildOMine
   bpm = 140
-  lead = Instrument.new(bpm, SawtoothOscillator.new(44100, 220.0, 0.3), [], nil, nil)
+  lead = Instrument.new(bpm, SawtoothOscillator.new(44100, 220.0, 0.3), nil, nil)
     
   leadTrack = Track.new(lead)
   2.times {

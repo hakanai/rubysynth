@@ -1,8 +1,8 @@
 def SweetDreams
   bpm = 140
-  noiseDrum = Instrument.new(bpm, NoiseOscillator.new(44100, 123.0, 0.6), [], nil, nil)
-  synthBass = Instrument.new(bpm, SawtoothOscillator.new(44100, 123.0, 0.3), [1.0], nil, nil)
-  voice = Instrument.new(bpm, SineOscillator.new(44100, 220.0, 0.8), [0.1, 0.4], nil, nil)
+  noiseDrum = Instrument.new(bpm, NoiseOscillator.new(44100, 123.0, 0.6), nil, nil)
+  synthBass = Instrument.new(bpm, OvertoneAdder.new(SawtoothOscillator.new(44100, 123.0, 0.3), [1.0]), nil, nil)
+  voice = Instrument.new(bpm, OvertoneAdder.new(SineOscillator.new(44100, 220.0, 0.8), [0.1, 0.4]), nil, nil)
   
   drumTrack = Track.new(noiseDrum)
   24.times {

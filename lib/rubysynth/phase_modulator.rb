@@ -8,13 +8,20 @@ module RubySynth
 			@modulator = modulator
 			@sampleRate = carrier.sampleRate
 
-			@ratio = modulator.frequency / carrier.frequency
+			@frequency_ratio = modulator.frequency / carrier.frequency
+			#I think including this would cause weird behaviour, but for symmetry...
+			#@amplitude_ratio = modulator.amplitude / carrier.amplitude
 		end
 
 		def frequency=(freq)
 			super
 			@carrier.frequency = freq
-			@modulator.frequency = freq * @ratio
+			@modulator.frequency = freq * @frequency_ratio
+		end
+
+		def amplitude=(ampl)
+			super
+			@carrier.amplitude = ampl
 		end
 
     def nextSample
