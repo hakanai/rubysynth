@@ -9,8 +9,6 @@ A music synthesizer written in Ruby.
 * [Joel Strait](https://github.com/jstrait) (original code)
 * [Trejkaz](https://github.com/trejkaz) (phase modulation)
 
-**Main repo** (AFAIK): https://github.com/jstrait/rubysynth
-
 
 Getting started
 ---------------
