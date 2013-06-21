@@ -1,22 +1,22 @@
 include RubySynth
 
-def sineBeep
-  return SineOscillator.new(44100, 440.0, 0.5).nextSamples(44100)
+def sine_beep
+  return SineOscillator.new(44100, 440.0, 0.5).next_samples(44100)
 end
 
-def squareBeep
-  return SquareOscillator.new(44100, 440.0, 0.5).nextSamples(44100)
+def square_beep
+  return SquareOscillator.new(44100, 440.0, 0.5).next_samples(44100)
 end
 
-def sawtoothBeep
-  return SawtoothOscillator.new(44100, 440.0, 0.5).nextSamples(44100)
+def sawtooth_beep
+  return SawtoothOscillator.new(44100, 440.0, 0.5).next_samples(44100)
 end
 
-def noiseBeep
-  return NoiseOscillator.new(44100, 440.0, 0.5).nextSamples(44100)
+def noise_beep
+  return NoiseOscillator.new(44100, 440.0, 0.5).next_samples(44100)
 end
 
-def majorScale
+def major_scale
   bpm = 140
   saw = Instrument.new(120, SineOscillator.new(44100, 220.0, 0.5), nil, nil)
   
@@ -30,10 +30,10 @@ def majorScale
   t.notes << Note.new("G#", 4, 4)
   t.notes << Note.new("A", 5, 4)
   
-  return t.nextSamples(t.sampleLength)
+  return t.next_samples(t.sample_length)
 end
 
-def minorScale
+def minor_scale
   bpm = 140
   saw = Instrument.new(120, SineOscillator.new(44100, 220.0, 0.5), nil, nil)
   
@@ -47,7 +47,7 @@ def minorScale
   t.notes << Note.new("G#", 3, 4)
   t.notes << Note.new("A", 4, 4)
   
-  return t.nextSamples(t.sampleLength)
+  return t.next_samples(t.sample_length)
 end
 
 def triads
@@ -55,60 +55,60 @@ def triads
   middle = Instrument.new(120, SineOscillator.new(44100, 220.0, 0.5), nil, nil)
   top = Instrument.new(120, SineOscillator.new(44100, 220.0, 0.5), nil, nil)
 
-  bottomTrack = Track.new(bottom)
-  bottomTrack.notes << Note.new("C", 3, 2)
-  bottomTrack.notes << Note.new("C", 3, 2)
-  bottomTrack.notes << Note.new("D", 3, 2)
-  bottomTrack.notes << Note.new("C", 3, 2)
+  bottom_track = Track.new(bottom)
+  bottom_track.notes << Note.new("C", 3, 2)
+  bottom_track.notes << Note.new("C", 3, 2)
+  bottom_track.notes << Note.new("D", 3, 2)
+  bottom_track.notes << Note.new("C", 3, 2)
   
-  middleTrack = Track.new(middle)
-  middleTrack.notes << Note.new("E", 3, 2)
-  middleTrack.notes << Note.new("F", 3, 2)
-  middleTrack.notes << Note.new("G", 3, 2)
-  middleTrack.notes << Note.new("E", 3, 2)
+  middle_track = Track.new(middle)
+  middle_track.notes << Note.new("E", 3, 2)
+  middle_track.notes << Note.new("F", 3, 2)
+  middle_track.notes << Note.new("G", 3, 2)
+  middle_track.notes << Note.new("E", 3, 2)
   
-  topTrack = Track.new(top)
-  topTrack.notes << Note.new("G", 3, 2)
-  topTrack.notes << Note.new("A", 4, 2)
-  topTrack.notes << Note.new("B", 4, 2)
-  topTrack.notes << Note.new("G", 3, 2)
+  top_track = Track.new(top)
+  top_track.notes << Note.new("G", 3, 2)
+  top_track.notes << Note.new("A", 4, 2)
+  top_track.notes << Note.new("B", 4, 2)
+  top_track.notes << Note.new("G", 3, 2)
   
   s = Song.new()
-  s.tracks = [bottomTrack, middleTrack, topTrack]
+  s.tracks = [bottom_track, middle_track, top_track]
   
-  return s.nextSamples(s.sampleLength)  
+  return s.next_samples(s.sample_length)  
 end
 
-def vibratoExample
+def vibrato_example
   normal = Instrument.new(120, SawtoothOscillator.new(44100, 220.0, 0.3), nil, nil)
   vibrato = Instrument.new(120, SawtoothOscillator.new(44100, 220.0, 0.3), SineOscillator.new(44100, 9.0, 15.0), nil)
 
-  normalTrack = Track.new(normal)
-  normalTrack.notes << Note.new("A", 3, 1)
+  normal_track = Track.new(normal)
+  normal_track.notes << Note.new("A", 3, 1)
 
-  vibratoTrack = Track.new(vibrato)
-  vibratoTrack.notes << Note.new("", 3, 1)
-  vibratoTrack.notes << Note.new("A", 3, 1)
+  vibrato_track = Track.new(vibrato)
+  vibrato_track.notes << Note.new("", 3, 1)
+  vibrato_track.notes << Note.new("A", 3, 1)
   
   s = Song.new()
-  s.tracks = [normalTrack, vibratoTrack]
+  s.tracks = [normal_track, vibrato_track]
   
-  return s.nextSamples(s.sampleLength)
+  return s.next_samples(s.sample_length)
 end
 
-def tremoloExample
+def tremolo_example
   normal = Instrument.new(120, SawtoothOscillator.new(44100, 220.0, 0.3), nil, nil)
   tremolo = Instrument.new(120, SawtoothOscillator.new(44100, 220.0, 0.3), nil, SineOscillator.new(44100, 5.0, 0.3))
 
-  normalTrack = Track.new(normal)
-  normalTrack.notes << Note.new("A", 3, 1)
+  normal_track = Track.new(normal)
+  normal_track.notes << Note.new("A", 3, 1)
 
-  tremoloTrack = Track.new(tremolo)
-  tremoloTrack.notes << Note.new("", 3, 1)
-  tremoloTrack.notes << Note.new("A", 3, 1)
+  tremolo_track = Track.new(tremolo)
+  tremolo_track.notes << Note.new("", 3, 1)
+  tremolo_track.notes << Note.new("A", 3, 1)
   
   s = Song.new()
-  s.tracks = [normalTrack, tremoloTrack]
+  s.tracks = [normal_track, tremolo_track]
   
-  return s.nextSamples(s.sampleLength)
+  return s.next_samples(s.sample_length)
 end

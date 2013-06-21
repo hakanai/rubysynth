@@ -7,7 +7,7 @@ module RubySynth
       first = @waveforms[0]
       @frequency = first.frequency
       @amplitude = first.amplitude
-      @sampleRate = first.sampleRate
+      @sample_rate = first.sample_rate
       @frequency_ratios = @waveforms.map { |w| w.frequency / @frequency }
       @amplitude_ratios = @waveforms.map { |w| w.amplitude / @amplitude }
     end
@@ -22,14 +22,14 @@ module RubySynth
       @waveforms.each_with_index { |w, i| w.amplitude = @amplitude * @amplitude_ratios[i] }
     end
 
-    def nextSample
-      sample = waveFunction
-      @waveforms.each { |w| w.nextSample }
+    def next_sample
+      sample = wave_function
+      @waveforms.each { |w| w.next_sample }
       sample
     end
 
-    def waveFunction
-      @waveforms.map { |w| w.waveFunction }.inject(:+) / @waveforms.size
+    def wave_function
+      @waveforms.map { |w| w.wave_function }.inject(:+) / @waveforms.size
     end
   end
 
@@ -39,10 +39,10 @@ module RubySynth
     def initialize(oscillator, overtones)
       oscillators = [ oscillator ]
       overtones.each_with_index do |overtone, i|
-        overtoneOscillator = oscillator.clone
-        overtoneOscillator.frequency = oscillator.frequency * (i + 2)
-        overtoneOscillator.amplitude = overtone
-        oscillators << overtoneOscillator
+        overtone_oscillator = oscillator.clone
+        overtone_oscillator.frequency = oscillator.frequency * (i + 2)
+        overtone_oscillator.amplitude = overtone
+        oscillators << overtone_oscillator
       end
       super(oscillators)
     end

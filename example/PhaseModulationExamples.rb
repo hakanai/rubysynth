@@ -1,5 +1,4 @@
-
-def phaseModulatedMajorScale
+def phase_modulated_major_scale
   bpm = 140
   waveform = PhaseModulator.new(
     SineOscillator.new(44100, 440.0, 0.5),
@@ -16,5 +15,5 @@ def phaseModulatedMajorScale
   t.notes << Note.new("G#", 4, 4)
   t.notes << Note.new("A", 5, 4)
   
-  return t.nextSamples(t.sampleLength)
+  return t.next_samples(t.sample_length)
 end

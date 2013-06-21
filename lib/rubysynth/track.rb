@@ -3,24 +3,24 @@ module RubySynth
     def initialize(instrument)
       @instrument = instrument
       @notes = []
-      @noteIndex = -1
-      @sampleLength = 0
+      @note_index = -1
+      @sample_length = 0
     end
-    
-    def nextSample
-      if @noteIndex == -1
+
+    def next_sample
+      if @note_index == -1
           @instrument.note = @notes[0]
-          @noteIndex = 0
+          @note_index = 0
       end
-      
-      if @instrument.note != nil
-        sample = @instrument.nextSample
+
+      if @instrument.note
+        sample = @instrument.next_sample
       else      
-        if @noteIndex < @notes.length
-          @noteIndex += 1
-                  
-          @instrument.note = @notes[@noteIndex]        
-          sample = @instrument.nextSample()
+        if @note_index < @notes.length
+          @note_index += 1
+
+          @instrument.note = @notes[@note_index]        
+          sample = @instrument.next_sample()
         else
           sample = 0.0
         end
@@ -29,18 +29,14 @@ module RubySynth
       sample
     end
     
-    def nextSamples(numSamples)
-      samples = Array.new(numSamples)
-      
-      (0..numSamples).each do |i|
-        samples[i - 1] = nextSample()
+    def next_samples(num_samples)
+      (0..num_samples).map do |i|
+        next_sample
       end
-      
-      samples
     end
     
-    def sampleLength()
-      @notes.inject(0) {|sum, note| sum + (@instrument.samplesPerBeat * (4.0 / note.duration)) }
+    def sample_length()
+      @notes.map {|note| (@instrument.samples_per_beat * (4.0 / note.duration)) }.inject(:+)
     end
     
     attr_accessor :notes, :instrument

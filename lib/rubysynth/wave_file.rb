@@ -54,57 +54,57 @@ The "data" subchunk contains the size of the data and the actual sound:
     SUB_CHUNK2_ID = "data"
     HEADER_SIZE = 36
     
-    def initialize(numChannels, sampleRate, bitsPerSample)
-      @numChannels = numChannels
-      @sampleRate = sampleRate
-      @bitsPerSample = bitsPerSample
+    def initialize(num_channels, sample_rate, bits_per_sample)
+      @num_channels = num_channels
+      @sample_rate = sample_rate
+      @bits_per_sample = bits_per_sample
       
-      @byteRate = sampleRate * numChannels * (bitsPerSample / 8)
-      @blockAlign = numChannels * (bitsPerSample / 8)
-      @sampleData = []
+      @byte_rate = sample_rate * num_channels * (bits_per_sample / 8)
+      @block_align = num_channels * (bits_per_sample / 8)
+      @sample_data = []
       @chunkSize = HEADER_SIZE + 0
     end
     
     def save(path)
       # All numeric values should be saved in little-endian format
       
-      sampleDataSize = @sampleData.length * @numChannels * (@bitsPerSample / 8)
+      sample_data_size = @sample_data.length * @num_channels * (@bits_per_sample / 8)
       
-      fileContents = CHUNK_ID
-      fileContents += [HEADER_SIZE + sampleDataSize].pack("V")
-      fileContents += FORMAT
-      fileContents += SUB_CHUNK1_ID
-      fileContents += [SUB_CHUNK1_SIZE].pack("V")
-      fileContents += [AUDIO_FORMAT].pack("v")
-      fileContents += [@numChannels].pack("v")
-      fileContents += [@sampleRate].pack("V")
-      fileContents += [@byteRate].pack("V")
-      fileContents += [@blockAlign].pack("v")
-      fileContents += [@bitsPerSample].pack("v")
-      fileContents += SUB_CHUNK2_ID
-      fileContents += [sampleDataSize].pack("V")
+      file_contents = CHUNK_ID
+      file_contents += [HEADER_SIZE + sample_data_size].pack("V")
+      file_contents += FORMAT
+      file_contents += SUB_CHUNK1_ID
+      file_contents += [SUB_CHUNK1_SIZE].pack("V")
+      file_contents += [AUDIO_FORMAT].pack("v")
+      file_contents += [@num_channels].pack("v")
+      file_contents += [@sample_rate].pack("V")
+      file_contents += [@byte_rate].pack("V")
+      file_contents += [@block_align].pack("v")
+      file_contents += [@bits_per_sample].pack("v")
+      file_contents += SUB_CHUNK2_ID
+      file_contents += [sample_data_size].pack("V")
       
-      if @bitsPerSample == 8
+      if @bits_per_sample == 8
         # Samples in 8-bit wave files are stored as a unsigned byte
         # Effective values are 0 to 255
-        @sampleData = @sampleData.map {|sample| ((sample * 127.0).to_i) + 127 }
-        fileContents += @sampleData.pack("C*")
-      elsif @bitsPerSample == 16
+        @sample_data = @sample_data.map {|sample| ((sample * 127.0).to_i) + 127 }
+        file_contents += @sample_data.pack("C*")
+      elsif @bits_per_sample == 16
         # Samples in 16-bit wave files are stored as a signed little-endian short
         # Effective values are -32768 to 32767
-        @sampleData = @sampleData.map {|sample| (sample * 32767.0).to_i }
-        fileContents += @sampleData.pack("v*")
+        @sample_data = @sample_data.map {|sample| (sample * 32767.0).to_i }
+        file_contents += @sample_data.pack("v*")
       else
         # Throw an error
       end
       
-      aFile = File.open(path, "w")
-      aFile.syswrite(fileContents)
-      aFile.close
-      @sampleData
+      File.open(path, "w") do |f|
+        f.syswrite(file_contents)
+      end
+      @sample_data
     end
     
-    attr_reader :numChannels, :sampleRate, :bitsPerSample, :byteRate, :blockAlign
-    attr_writer :sampleData
+    attr_reader :num_channels, :sample_rate, :bits_per_sample, :byte_rate, :block_align
+    attr_writer :sample_data
   end
 end

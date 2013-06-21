@@ -1,33 +1,33 @@
 module RubySynth
   class Instrument
-    def initialize(beatsPerMinute, oscillator, vibratoLFO = nil, volumeLFO = nil)
-      @beatsPerMinute = beatsPerMinute
+    def initialize(beats_per_minute, oscillator, vibrato_lfo = nil, volume_lfo = nil)
+      @beats_per_minute = beats_per_minute
       @oscillator = oscillator
-      @vibratoLFO = vibratoLFO
-      @volumeLFO = volumeLFO
+      @vibrato_lfo = vibrato_lfo
+      @volume_lfo = volume_lfo
       
-      @prevVibratoSample = 0.0
-      @prevVolumeSample = 0.0
+      @prev_vibrato_sample = 0.0
+      @prev_volume_sample = 0.0
       
-      @samplesPerBeat = (oscillator.sampleRate * 60) / beatsPerMinute;
+      @samples_per_beat = (oscillator.sample_rate * 60) / beats_per_minute;
       @note = nil
-      @noteSampleLength = 0
-      @sampleIndex = 0
+      @note_sample_length = 0
+      @sample_index = 0
     end
     
-    def updateFrequencies
-      currentVibratoSample = @vibratoLFO.nextSample()
-      vibratoDelta = currentVibratoSample - @prevVibratoSample
-      @prevVibratoSample = currentVibratoSample
+    def update_frequencies
+      current_vibrato_sample = @vibrato_lfo.next_sample()
+      vibrato_delta = current_vibrato_sample - @prev_vibrato_sample
+      @prev_vibrato_sample = current_vibrato_sample
 
       # Adjust frequency of the oscillators by the vibrato delta
-      @oscillator.frequency += vibratoDelta
+      @oscillator.frequency += vibrato_delta
     end
     
-    def updateAmplitudes
-      currentVolumeSample = @volumeLFO.nextSample()
-      volumeDelta = currentVolumeSample - @prevVolumeSample
-      @prevVolumeSample = currentVolumeSample
+    def update_amplitudes
+      current_volume_sample = @volume_lfo.next_sample()
+      volumeDelta = current_volume_sample - @prev_volume_sample
+      @prev_volume_sample = current_volume_sample
 
       @oscillator.amplitude += volumeDelta
       if @oscillator.amplitude > 1.0
@@ -35,24 +35,24 @@ module RubySynth
       end
     end
     
-    def nextSample
+    def next_sample
       sample = 0.0
       
-      if @note != nil && @sampleIndex < @noteSampleLength
+      if @note && @sample_index < @note_sample_length
         
-        if @vibratoLFO != nil
-          updateFrequencies()
+        if @vibrato_lfo
+          update_frequencies()
         end
         
-        if @volumeLFO != nil
-          updateAmplitudes()
+        if @volume_lfo
+          update_amplitudes()
         end
         
-        sample = @oscillator.nextSample()
+        sample = @oscillator.next_sample()
 
-        @sampleIndex += 1
+        @sample_index += 1
         
-        if(@sampleIndex >= @noteSampleLength)
+        if @sample_index >= @note_sample_length
           @note = nil
         end
       end
@@ -60,26 +60,22 @@ module RubySynth
       sample
     end
 
-    def nextSamples(numSamples)
-      samples = Array.new(numSamples)
-      
-      (0..numSamples).each do |i|
-        samples[i - 1] = nextSample()
+    def next_samples(num_samples)
+      (0..num_samples).map do |i|
+        next_sample()
       end
-      
-      samples
     end
 
-    def note=(newNote)
-      if(newNote != nil)
-        @note = newNote
-        @oscillator.frequency = newNote.frequency
+    def note=(new_note)
+      if new_note
+        @note = new_note
+        @oscillator.frequency = new_note.frequency
 
-        @sampleIndex = 0
-        @noteSampleLength = @samplesPerBeat * (4.0 / newNote.duration)
+        @sample_index = 0
+        @note_sample_length = @samples_per_beat * (4.0 / new_note.duration)
       end
     end
     
-    attr_reader :tempo, :beatsPerMinute, :note, :noteSampleLength, :samplesPerBeat
+    attr_reader :tempo, :beats_per_minute, :note, :note_sample_length, :samples_per_beat
   end
 end

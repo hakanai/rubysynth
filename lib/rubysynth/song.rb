@@ -4,23 +4,23 @@ module RubySynth
       @tracks = []
     end
     
-    def nextSample
-      sample = @tracks.inject(0.0) {|sum, track| sum += track.nextSample() }
+    def next_sample
+      sample = @tracks.inject(0.0) {|sum, track| sum += track.next_sample() }
       sample = sample / @tracks.length
     end
 
-    def nextSamples(numSamples)
-      samples = Array.new(numSamples)
+    def next_samples(num_samples)
+      samples = Array.new(num_samples)
 
-      (0..numSamples).each do |i|
-        samples[i - 1] = nextSample()
+      (0..num_samples).each do |i|
+        samples[i - 1] = next_sample()
       end
 
       samples
     end
     
-    def sampleLength()
-      @tracks.inject(0) {|longest, track| (longest > track.sampleLength) ? longest : track.sampleLength}
+    def sample_length()
+      @tracks.inject(0) {|longest, track| (longest > track.sample_length) ? longest : track.sample_length}
     end
     
     attr_accessor :tracks

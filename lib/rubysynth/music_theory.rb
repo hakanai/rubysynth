@@ -66,12 +66,12 @@ module RubySynth
       "Ab"  => "G#"
     }
   
-    def MusicTheory.noteRatio(noteName)
-      NOTE_RATIOS[noteName]
+    def MusicTheory.note_ratio(note_name)
+      NOTE_RATIOS[note_name]
     end
 
-    def MusicTheory.enharmonicEquivalent(noteName)
-      ENHARMONIC_EQUIVALENTS[noteName]
+    def MusicTheory.enharmonic_equivalent(note_name)
+      ENHARMONIC_EQUIVALENTS[note_name]
     end
   end
 end

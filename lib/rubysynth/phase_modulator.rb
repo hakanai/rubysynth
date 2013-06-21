@@ -1,12 +1,12 @@
 module RubySynth
 	# Represents application of phase modulation (PM).
 	# The modulator is used to modulate the phase of the carrier signal.
-	# For this to work, the carrier waveform's waveFunction must support a parameter for the modulation.
+	# For this to work, the carrier waveform's wave_function must support a parameter for the modulation.
 	class PhaseModulator < Oscillator
 		def initialize(carrier, modulator)
 			@carrier = carrier
 			@modulator = modulator
-			@sampleRate = carrier.sampleRate
+			@sample_rate = carrier.sample_rate
 
 			@frequency_ratio = modulator.frequency / carrier.frequency
 			#I think including this would cause weird behaviour, but for symmetry...
@@ -24,15 +24,15 @@ module RubySynth
 			@carrier.amplitude = ampl
 		end
 
-    def nextSample
-    	sample = waveFunction
-    	@carrier.nextSample
-    	@modulator.nextSample
+    def next_sample
+    	sample = wave_function
+    	@carrier.next_sample
+    	@modulator.next_sample
     	sample
     end
 
-		def waveFunction
-			@carrier.waveFunction(@modulator.waveFunction)
+		def wave_function
+			@carrier.wave_function(@modulator.wave_function)
 		end
 	end
 end
