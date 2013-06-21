@@ -2,7 +2,8 @@ $LOAD_PATH.unshift(File.dirname(__FILE__))
 require 'Includes'
 
 startTime = Time.now
-data = sineBeep()
+#data = sineBeep()
+data = phaseModulatedMajorScale()
 #data = DemoSong()
 #data = SweetChildOMine()
 #data = SweetDreams()
