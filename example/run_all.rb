@@ -1,5 +1,5 @@
 $LOAD_PATH.unshift(File.dirname(__FILE__))
-require 'Includes'
+require 'includes'
 
 # Generates wave files for all examples as a kind of coverage or smoke test.
 

@@ -1,5 +1,5 @@
 $LOAD_PATH.unshift(File.dirname(__FILE__))
-require 'Includes'
+require 'includes'
 
 start_time = Time.now
 #data = sine_beep()

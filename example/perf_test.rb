@@ -1,4 +1,5 @@
-require 'Includes'
+$LOAD_PATH.unshift(File.dirname(__FILE__))
+require 'includes'
 
 SAMPLES_PER_SECOND = 44100
 
