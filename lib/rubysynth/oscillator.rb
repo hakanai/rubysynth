@@ -60,9 +60,9 @@ module RubySynth
   class SquareOscillator < Oscillator
     def wave_function
       if @period_offset >= 0.5
-        return @amplitude
+        @amplitude
       else
-        return -@amplitude
+        -@amplitude
       end
     end
   end
@@ -70,17 +70,22 @@ module RubySynth
 
   class SawtoothOscillator < Oscillator
     def wave_function
-      (1.0 - (@period_offset * 2.0)) / (1.0 / @amplitude)
+      @amplitude * (1.0 - (@period_offset * 2.0))
     end
   end
 
 
   class NoiseOscillator < Oscillator
+    def initialize(sample_rate, frequency, amplitude)
+      super
+      @rng = Random.new
+    end
+
     def wave_function
       if @frequency == 0.0
-        return 0.0
+        0.0
       else
-        return (1.0 - (rand() * 2.0)) / (1.0 / @amplitude)
+        @amplitude * @rng.rand(-1.0..1.0)
       end
     end
   end
