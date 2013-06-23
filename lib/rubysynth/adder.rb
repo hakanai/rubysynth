@@ -22,6 +22,14 @@ module RubySynth
       @waveforms.each_with_index { |w, i| w.amplitude = @amplitude * @amplitude_ratios[i] }
     end
 
+    def key_down
+      @waveforms.each { |w| w.key_down }
+    end
+
+    def key_up
+      @waveforms.each { |w| w.key_up }
+    end
+
     def next_sample
       sample = wave_function
       @waveforms.each { |w| w.next_sample }

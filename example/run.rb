@@ -4,6 +4,7 @@ require 'includes'
 start_time = Time.now
 #data = sine_beep()
 #data = phase_modulated_major_scale()
+#data = adsr_major_scale()
 data = demo_song()
 #data = sweet_child_o_mine()
 #data = sweet_dreams()

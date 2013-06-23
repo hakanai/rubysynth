@@ -7,7 +7,7 @@ A music synthesizer written in Ruby.
 **Authors**:
 
 * [Joel Strait](https://github.com/jstrait) (original code)
-* [Trejkaz](https://github.com/trejkaz) (phase modulation)
+* [Trejkaz](https://github.com/trejkaz) (phase modulation, envelopes)
 
 
 Getting started

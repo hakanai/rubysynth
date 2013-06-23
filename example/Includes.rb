@@ -3,6 +3,7 @@ require 'rubysynth'
 
 require 'example_sounds'
 require 'phase_modulation_examples'
+require 'envelope_examples'
 require 'demo_song'
 require 'sweet_child_o_mine'
 require 'sweet_dreams'

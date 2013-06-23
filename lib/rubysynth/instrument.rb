@@ -13,6 +13,8 @@ module RubySynth
       @note = nil
       @note_sample_length = 0
       @sample_index = 0
+
+      @key_state = :up
     end
     
     def update_frequencies
@@ -38,8 +40,13 @@ module RubySynth
     def next_sample
       sample = 0.0
       
-      if @note && @sample_index < @note_sample_length
-        
+      if @note
+        # Even though the note has ended, the oscillator might still have samples.
+        if @key_state == :down && @sample_index >= @note_sample_length
+          @key_state = :up
+          @oscillator.key_up
+        end
+
         if @vibrato_lfo
           update_frequencies()
         end
@@ -52,9 +59,11 @@ module RubySynth
 
         @sample_index += 1
         
-        if @sample_index >= @note_sample_length
-          @note = nil
-        end
+        #TODO: It would be nice to clean it up eventually but notes don't currently have any way
+        #      to tell us when they run out of samples.
+        #if @sample_index >= @note_sample_length
+        #  @note = nil
+        #end
       end
       
       sample
@@ -73,6 +82,9 @@ module RubySynth
 
         @sample_index = 0
         @note_sample_length = @samples_per_beat * (4.0 / new_note.duration)
+
+        @key_state = :down
+        @oscillator.key_down
       end
     end
     

@@ -3,10 +3,6 @@ module RubySynth
   # Represents a waveform. A waveform might be a simple oscillator or a complex waveform.
   # Method wave_function defined by the subclass returns the value of the waveform for @period_offset.
   class Waveform
-    def initialize
-      @period_offset = 0.0
-    end
-
     def next_samples(num_samples)
       samples = Array.new(num_samples)
 
@@ -20,8 +16,6 @@ module RubySynth
     def wave_function
       raise "Forgot to implement wave_function in subclass: #{self.class}"
     end
-
-    attr_reader :period_offset
   end
 
   class Oscillator < Waveform
@@ -31,6 +25,15 @@ module RubySynth
       @sample_rate = sample_rate
       self.frequency = frequency
       self.amplitude = amplitude
+      @period_offset = 0.0
+    end
+
+    # Called when a key is pressed (when a note starts.)
+    def key_down
+    end
+
+    # Called when a key is released (when a note ends.)
+    def key_up
     end
 
     def next_sample
@@ -50,7 +53,7 @@ module RubySynth
     end
       
     attr_accessor :amplitude
-    attr_reader :frequency, :sample_rate, :period_delta
+    attr_reader :frequency, :sample_rate, :period_delta, :period_offset
   end
 
 

@@ -24,6 +24,16 @@ module RubySynth
 			@carrier.amplitude = ampl
 		end
 
+		def key_down
+			@carrier.key_down
+			@modulator.key_down
+		end
+
+		def key_up
+			@carrier.key_up
+			@modulator.key_up
+		end
+		
     def next_sample
     	sample = wave_function
     	@carrier.next_sample
