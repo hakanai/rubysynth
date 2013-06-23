@@ -17,6 +17,10 @@ module RubySynth
       samples
     end
 
+    def wave_function
+      raise "Forgot to implement wave_function in subclass: #{self.class}"
+    end
+
     attr_reader :period_offset
   end
 
