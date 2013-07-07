@@ -14,7 +14,7 @@ method_names = %w(
 	vibrato_example
 	tremolo_example
 	phase_modulated_major_scale
-	adsr_major_scale
+	linear_envelope_major_scale
 	demo_song
 	sweet_child_o_mine
 	sweet_dreams

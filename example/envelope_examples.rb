@@ -1,7 +1,7 @@
-def adsr_major_scale
+def linear_envelope_major_scale
   bpm = 140
   waveform = EnvelopedOscillator.new(
-    ADSREnvelope.new(0.0, 0.6, 0.0, 2.0),
+    LinearEnvelope.new(:key_down => {0.0 => 1.0, 0.6 => 0.0}, :key_up => {2.0 => 0.0}),
     SineOscillator.new(44100, 440.0, 0.5))
   instrument = Instrument.new(120, waveform, nil, nil)
 

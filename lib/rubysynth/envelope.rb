@@ -102,6 +102,7 @@ module RubySynth
     end
   end
 
+
   # Envelope following the traditional Attack -> Decay -> Sustain -> Release pattern.
   # I'm sure if you're reading this, you probably know what this means already, but it looks like this:
   #
@@ -113,82 +114,89 @@ module RubySynth
   #             /                     \
   #   0.0 _____/.......................\_______
   #
-  class ADSREnvelope < Envelope
-
-    # Creates a new ADSR envelope with the specified parameters.
-    #
-    # When the key is pressed, we start a timer. While the key is held:
-    #   Over attack_time seconds, amplitude is gradually increased from 0.0 to 1.0
-    #   Over decay_time seconds, amplitude is gradually decreased from 1.0 to sustain_level
-    #
-    # When the key is released, we start another timer:
-    #   Over release_time seconds, amplitude is gradually decreased from sustain_level to 0.0
-    #
-    # sustain_level should be between 0.0 and 1.0.
-    # If you set sustain_level to 1.0 then decay_time might as well be set to 0.0.
-    # If you set sustain_level to 0.0 then release_time might as well be set to 0.0.
-    #
-    # All of these transitions are currently linear.
-    def initialize(attack_time, decay_time, sustain_level, release_time)
-      @attack_time = attack_time
-      @decay_time = decay_time
-      @sustain_level = sustain_level
-      @release_time = release_time
-      @state = :off
+  # We generalise this so that you can have multiple attack, decay and release segments where
+  # each segment is linear. This allows shaping the trivial ADSR envelopes as well as envelopes
+  # which have more segments during each stage.
+  #
+  #     LinearEnvelope.new(:key_down => {0.1 => 1.0, 0.3 => 0.7, 0.6 => 0.5},
+  #                        :key_up => {1.0 => 0.0})
+  # 
+  # The key for the map is the time offset and the value is the level (0.0~1.0.)
+  # Times are absolute from the event which caused the transitions to start, not relative to
+  # a single segment of the envelope.
+  class LinearEnvelope < Envelope
+    def initialize(params)
+      @key_down_transitions = params[:key_down].to_a
+      @key_up_transitions = params[:key_up].to_a
+      @state = :hold
       @value = 0
       @state_time = 0
     end
 
+#    def on_key_down(hash)
+#      @key_down_transitions = hash.to_a
+#      self
+#    end
+
+#    def on_key_up(hash)
+#      @key_up_transitions = hash.to_a
+#      self
+#    end
+
     def key_down
-      @state = :attack
+      @state = :key_down
       @state_time = 0
-      maybe_advance_to_next_state(@attack_time, :decay)
+      @zero_level = 0
+      update_value(@key_down_transitions)
     end
 
     def key_up
-      @state = :release
+      @state = :key_up
       @state_time = 0
-      # Regardless of where we are in the curve, the release slopes down from the current value.
-      @release_level = @value
-      maybe_advance_to_next_state(@release_time, :off)
+      # release level starts from current level, not the sustain value
+      @zero_level = @level
+      update_value(@key_up_transitions)
     end
 
     def advance(seconds)
       @state_time += seconds
 
       case @state
-      when :attack
-        @value = @state_time / @attack_time
-        maybe_advance_to_next_state(@attack_time, :decay)
-      when :decay
-        @value = 1.0 - (1.0 - @sustain_level) * (@state_time / @decay_time)
-        maybe_advance_to_next_state(@decay_time, :sustain)
-      when :sustain
-        # stays sustained until key_up
-        @value = @sustain_level
-      when :release
-        @value = @release_level * (1.0 - (@state_time / @release_time))
-        maybe_advance_to_next_state(@release_time, :off)
-      when :off
-        # stays off until key_down
-        @value = 0.0
+      when :key_down
+        update_value(@key_down_transitions)
+      when :key_up
+        update_value(@key_up_transitions)
+      when :hold
+        # stay at the same level until an event
       end
     end
 
-    # If the current time is past the length of the current state (threshold_time), move into next_state.
-    #
-    # The assumption here is that the seconds values are very short.
-    # If it were longer, we'd potentially pass a significant time into the next state and would have to
-    # calculate how far in, adjusting @value appropriately.
-    def maybe_advance_to_next_state(threshold_time, next_state)
-      if @state_time >= threshold_time
-        @state = next_state
-        @state_time = 0
-
-        #TODO: Hack here to avoid divide by zero error when @attack_time and @decay_time are both 0.0.
-        # A proper fix is to use something more like a state machine.
-        if @state == :decay
-          maybe_advance_to_next_state(@decay_time, :sustain)
+    def update_value(transitions)
+      new_value = 0.0
+      transitions.each_with_index do |(time, level), index|
+        if @state_time > time
+          if index == transitions.size - 1
+            @value = level # past the end of the last transition
+          end
+        else # found the transition we're in.
+          # values for (p)revious (t)ransition:
+          pt_time = 0.0
+          pt_level = @zero_level
+          if index > 0
+            pt = transitions[index - 1]
+            pt_time = pt[0]
+            pt_level = pt[1]
+          end
+          # Dodging a division by zero. If we're still at the time of the previous transition
+          # (e.g. a transition at 0.0 immediately goes to 1.0) yet we're in this transition,
+          # we must be right at the start of the transition, so use the level of the previous
+          # transition.
+          if time == pt_time
+            @value = pt_level
+          else
+            @value = pt_level + (level - pt_level) * ((@state_time - pt_time) / (time - pt_time))
+          end
+          break
         end
       end
     end
@@ -197,4 +205,5 @@ module RubySynth
       @value
     end
   end
+
 end
